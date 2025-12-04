@@ -1,0 +1,36 @@
+# File: kubernetes/backend-deployment.yaml
+# Defines the desired state (number of replicas, container spec) for the backend API.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend   # CRITICAL: This label links to the backend-service.yaml
+spec:
+  # Rolling Update Strategy is the default and ensures zero-downtime deployments
+  replicas: 3 # Running three instances for high availability and load balancing
+  selector:
+    matchLabels:
+      app: backend
+  # Pod Template definition
+  template:
+    metadata:
+      labels:
+        app: backend # Pods managed by this deployment carry the 'backend' label
+    spec:
+      containers:
+      - name: backend-container
+        # ECR URI updated using your provided Account ID, Region, and Repository path
+        image: 689867849329.dkr.ecr.ap-south-1.amazonaws.com/my-project/backend:latest
+        ports:
+        - name: http-api
+          # The container port the backend application listens on internally (e.g., Node.js/Express)
+          containerPort: 3000
+        resources:
+          # Define resource requests (what the Pod needs) and limits (what it can't exceed)
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
