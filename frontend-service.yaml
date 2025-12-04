@@ -1,0 +1,15 @@
+# kubernetes/frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  # Crucial: This tells EKS to provision an AWS Load Balancer
+  type: LoadBalancer
+  # This matches the labels defined in the frontend-deployment.yaml
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 80           # The port the public will hit (standard HTTP)
+    targetPort: 8080   # The port the container is listening on (from Deployment)
