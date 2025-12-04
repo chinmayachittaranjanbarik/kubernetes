@@ -1,0 +1,16 @@
+# kubernetes/backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  # CRITICAL: This exact name will be the DNS name for the frontend to use (e.g., http://backend-service:3000)
+  name: backend-service
+spec:
+  # This matches the labels defined in the backend-deployment.yaml (not shown, but identical to frontend's structure)
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 3000          # The port the service exposes internally
+    targetPort: 3000    # The port the backend container listens on
+  # CRITICAL: Only accessible from within the EKS cluster
+  type: ClusterIP
