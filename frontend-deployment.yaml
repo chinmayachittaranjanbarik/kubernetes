@@ -1,0 +1,29 @@
+# kubernetes/frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend
+spec:
+  # Desired number of running instances (Pods)
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-container
+        # Jenkins will update this image tag during the CD stage
+        image: 689867849329.dkr.ecr.ap-south-1.amazonaws.com/my-project/frontend/my-project/frontend:latest
+        ports:
+        # The port your Docker container exposes (e.g., 8080 from the Dockerfile)
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: "500m" # Limit to 0.5 CPU core
+            memory: "512Mi" # Limit to 512 MiB of RAM
